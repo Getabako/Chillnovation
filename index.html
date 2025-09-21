@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チルノベーション - AIマッチングプラットフォーム</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* リセットと基本スタイル */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(rgba(20, 20, 20, 0.7), rgba(40, 30, 20, 0.8)), url('images/backGround.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #f4f1e8;
+            line-height: 1.6;
+        }
+
+        /* コンテナ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #5d3a2b 100%);
+            color: #f4f1e8;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid #8b6914;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+            color: #d4af37;
+            font-family: 'Georgia', serif;
+            letter-spacing: 2px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-name {
+            background: rgba(212, 175, 55, 0.2);
+            padding: 0.7rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            font-weight: 500;
+        }
+
+        .user-name:hover {
+            background: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mode-btn {
+            padding: 0.6rem 1rem;
+            border: 2px solid #8b6914;
+            border-radius: 8px;
+            background: rgba(20, 20, 20, 0.8);
+            color: #c9b896;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .mode-btn:hover {
+            background: rgba(139, 105, 20, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 105, 20, 0.3);
+        }
+
+        .mode-btn.active {
+            background: rgba(139, 105, 20, 0.5);
+            color: #d4af37;
+            box-shadow: 0 4px 15px rgba(139, 105, 20, 0.4);
+        }
+
+        /* レイアウト */
+        .layout {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1;
+        }
+
+        /* セクション */
+        .section {
+            background: rgba(20, 20, 20, 0.85);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 1px solid rgba(139, 105, 20, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .section h2 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #8b6914;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* カードグリッド */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        /* カード */
+        .card {
+            background: linear-gradient(to bottom right, rgba(40, 30, 20, 0.9), rgba(60, 45, 30, 0.85));
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(139, 105, 20, 0.4);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(139, 105, 20, 0.3);
+            border-color: #d4af37;
+            background: linear-gradient(to bottom right, rgba(60, 45, 30, 0.9), rgba(80, 60, 40, 0.85));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+        }
+
+        .card h3 {
+            color: #f4f1e8;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .card-description {
+            color: #c9b896;
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* マッチスコア */
+        .match-score {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .match-score.high { background: #10b981; }
+        .match-score.medium { background: #f59e0b; }
+        .match-score.low { background: #ef4444; }
+
+        /* タグ */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 1.2rem 0;
+        }
+
+        .tag {
+            background: rgba(139, 105, 20, 0.3);
+            color: #d4af37;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(139, 105, 20, 0.5);
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            background: rgba(139, 105, 20, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(139, 105, 20, 0.3);
+        }
+
+        /* 情報行 */
+        .info-row {
+            color: #c9b896;
+            font-size: 0.95rem;
+            margin: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-row strong {
+            color: #f4f1e8;
+            font-weight: 600;
+        }
+
+        .info-row i {
+            color: #d4af37;
+            width: 16px;
+        }
+
+        /* ボタン */
+        .btn {
+            background: linear-gradient(135deg, #8b6914 0%, #d4af37 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-right: 0.8rem;
+            margin-top: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4a2c1a 0%, #6b3e2e 100%);
+            color: #d4af37;
+            border: 2px solid #8b6914;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #6b3e2e 0%, #8b4513 100%);
+            box-shadow: 0 8px 25px rgba(107, 62, 46, 0.4);
+        }
+
+        .btn-block {
+            width: 100%;
+            margin-right: 0;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: 320px;
+        }
+
+        .sidebar-content {
+            background: rgba(20, 20, 20, 0.85);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 1px solid rgba(139, 105, 20, 0.3);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar h3 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #8b6914;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #c9b896;
+            font-size: 0.95rem;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #d4af37;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(40, 30, 20, 0.9));
+            margin: 5% auto;
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 650px;
+            position: relative;
+            animation: slideIn 0.3s;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid rgba(139, 105, 20, 0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            backdrop-filter: blur(15px);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #c9b896;
+            transition: all 0.3s;
+        }
+
+        .close:hover {
+            color: #d4af37;
+            transform: scale(1.1);
+        }
+
+        .modal h2 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #8b6914;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .modal h3 {
+            color: #f4f1e8;
+            margin: 2rem 0 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .modal ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .modal li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        /* レポートセクション */
+        .report-section {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* ポートフォリオ */
+        .portfolio-section {
+            margin: 1.5rem 0;
+        }
+
+        blockquote {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 968px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .sidebar-content {
+                position: static;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        /* ローディングアニメーション */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">チルノベーション</h1>
+            <div class="user-info">
+                <span class="user-name" onclick="showUserProfile()">田中 太郎</span>
+                <div class="mode-buttons">
+                    <button id="seekingBtn" class="mode-btn active" onclick="setMode('seeking')">経験を得たい</button>
+                    <button id="offeringBtn" class="mode-btn" onclick="setMode('offering')">経験を与えたい</button>
+                    <button id="collaborationBtn" class="mode-btn" onclick="setMode('collaboration')">仲間を探す</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインレイアウト -->
+    <div class="container">
+        <div class="layout">
+            <!-- メインコンテンツ -->
+            <main class="main-content">
+                <!-- おすすめグループセクション -->
+                <section class="section">
+                    <h2><i class="fas fa-bullseye"></i> あなたにおすすめのグループ</h2>
+                    <div id="recommendedGroups" class="cards-grid"></div>
+                </section>
+
+                <!-- 募集一覧セクション -->
+                <section class="section">
+                    <h2><i class="fas fa-clipboard-list"></i> 募集中のメンバー</h2>
+                    <div id="userListing" class="cards-grid"></div>
+                </section>
+            </main>
+
+            <!-- サイドバー -->
+            <aside class="sidebar">
+                <div class="sidebar-content">
+                    <h3><i class="fas fa-chart-bar"></i> 活動サマリー</h3>
+                    <div id="activitySummary">
+                        <div class="stat-item">
+                            <span class="stat-label">参加グループ</span>
+                            <span class="stat-value">3</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">コネクション</span>
+                            <span class="stat-value">15名</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">活動時間</span>
+                            <span class="stat-value">24時間</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">評価スコア</span>
+                            <span class="stat-value"><i class="fas fa-star"></i> ${currentUser.score}</span>
+                        </div>
+                    </div>
+                    <button onclick="showPortfolio()" class="btn btn-block">
+                        <i class="fas fa-folder"></i> ポートフォリオを見る
+                    </button>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- モーダル -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============ データ定義 ============
+        const dummyUsers = {
+            seeking: [
+                {
+                    id: 'u001',
+                    name: '佐藤 美咲',
+                    age: 24,
+                    avatar: '<i class="fas fa-user-graduate"></i>',
+                    title: '秋田大学 経済学部4年',
+                    skills: ['マーケティング', 'SNS運用', 'データ分析'],
+                    interests: ['地域活性化', 'スタートアップ', 'DX'],
+                    bio: '地元秋田で起業を目指す大学生。実践的なビジネス経験を積みたい',
+                    matchScore: 92
+                },
+                {
+                    id: 'u002',
+                    name: '高橋 健太',
+                    age: 27,
+                    avatar: '<i class="fas fa-laptop-code"></i>',
+                    title: 'Uターン希望エンジニア',
+                    skills: ['Web開発', 'AI/機械学習', 'クラウド'],
+                    interests: ['技術教育', '地域DX', '農業Tech'],
+                    bio: '東京で5年勤務。秋田でテクノロジーを活かした事業に関わりたい',
+                    matchScore: 88
+                },
+                {
+                    id: 'u003',
+                    name: '木村 さくら',
+                    age: 22,
+                    avatar: '<i class="fas fa-briefcase"></i>',
+                    title: '秋田県立大学 システム科学技術学部3年',
+                    skills: ['プログラミング', 'IoT', 'ロボティクス'],
+                    interests: ['製造業DX', 'スマート農業', 'AI活用'],
+                    bio: '技術で秋田の産業を革新したい。実務経験を求めています',
+                    matchScore: 85
+                }
+            ],
+
+            offering: [
+                {
+                    id: 'e001',
+                    name: '山田 一郎',
+                    age: 45,
+                    avatar: '<i class="fas fa-user-tie"></i>',
+                    title: '株式会社秋田製作所 代表取締役',
+                    company: '製造業（従業員50名）',
+                    skills: ['経営ノウハウ', '業界知識', '人脈提供'],
+                    interests: ['若い感性', 'DX推進', 'SNSマーケティング'],
+                    bio: '伝統産業×テクノロジーで新しい価値創造を目指す',
+                    matchScore: 95
+                },
+                {
+                    id: 'e002',
+                    name: '鈴木 恵子',
+                    age: 38,
+                    avatar: '<i class="fas fa-briefcase"></i>',
+                    title: '合同会社あきたフードラボ CEO',
+                    company: '食品開発・飲食業',
+                    skills: ['起業経験', '商品開発', 'ブランディング'],
+                    interests: ['EC展開', '若者向け商品企画', '海外展開'],
+                    bio: '秋田の食文化を世界へ。一緒に挑戦する仲間募集',
+                    matchScore: 87
+                },
+                {
+                    id: 'e003',
+                    name: '田村 修司',
+                    age: 52,
+                    avatar: '<i class="fas fa-user-tie"></i>',
+                    title: '秋田観光開発株式会社 専務',
+                    company: '観光・サービス業',
+                    skills: ['事業開発', '地域連携', 'マーケティング'],
+                    interests: ['インバウンド対策', 'デジタル集客', '体験型観光'],
+                    bio: '秋田の観光を次世代へ。新しいアイデアを求めています',
+                    matchScore: 83
+                }
+            ],
+
+            collaboration: [
+                {
+                    id: 'v001',
+                    name: '伊藤 翔',
+                    age: 29,
+                    avatar: '<i class="fas fa-palette"></i>',
+                    title: 'フリーランスデザイナー',
+                    skills: ['UI/UX', 'ブランディング', '動画制作'],
+                    interests: ['コワーキング', 'クリエイティブ', '地域プロモーション'],
+                    bio: '同世代のクリエイターと秋田を盛り上げるプロジェクトをしたい',
+                    matchScore: 90
+                },
+                {
+                    id: 'v002',
+                    name: '加藤 リナ',
+                    age: 26,
+                    avatar: '<i class="fas fa-mobile-alt"></i>',
+                    title: 'マーケティングコンサルタント',
+                    skills: ['デジタルマーケティング', 'SNS戦略', 'PR'],
+                    interests: ['地方創生', '観光促進', 'インバウンド'],
+                    bio: '秋田の魅力を全国に発信するプロジェクトを立ち上げたい',
+                    matchScore: 86
+                },
+                {
+                    id: 'v003',
+                    name: '斉藤 大樹',
+                    age: 31,
+                    avatar: '<i class="fas fa-laptop"></i>',
+                    title: 'スタートアップCTO',
+                    skills: ['システム開発', 'プロダクト設計', 'チーム構築'],
+                    interests: ['EdTech', 'AgriTech', '地域DX'],
+                    bio: '技術で地域課題を解決する仲間を探しています',
+                    matchScore: 88
+                }
+            ]
+        };
+
+        const dummyGroups = [
+            {
+                id: 'g001',
+                name: '秋田DXプロジェクト',
+                type: 'experience',
+                icon: '<i class="fas fa-rocket"></i>',
+                description: '地元企業のデジタル化を若者の力で推進',
+                members: ['山田一郎', '佐藤美咲', '高橋健太'],
+                maxMembers: 5,
+                tags: ['DX', '製造業', 'インターン'],
+                status: '募集中',
+                nextMeeting: '4月15日(月) 19:00 @シーシャラウンジ',
+                matchScore: 92,
+                matchReason: 'あなたのマーケティングスキルが山田社長のニーズと高マッチ'
+            },
+            {
+                id: 'g002',
+                name: '秋田フードテック研究会',
+                type: 'experience',
+                icon: '<i class="fas fa-utensils"></i>',
+                description: '伝統食材×最新技術で新商品開発',
+                members: ['鈴木恵子', '佐藤美咲'],
+                maxMembers: 4,
+                tags: ['食品', '商品開発', 'マーケティング'],
+                status: '募集中（あと2名）',
+                nextMeeting: '4月18日(木) 18:00 @シーシャラウンジ',
+                matchScore: 87,
+                matchReason: 'SNS運用経験が鈴木CEOのEC展開ニーズとマッチ'
+            },
+            {
+                id: 'g003',
+                name: '秋田クリエイター集団',
+                type: 'collaboration',
+                icon: '<i class="fas fa-palette"></i>',
+                description: 'デザイン×テクノロジーで地域課題解決',
+                members: ['伊藤翔', '加藤リナ', '斉藤大樹'],
+                maxMembers: 5,
+                tags: ['クリエイティブ', 'スタートアップ', '協業'],
+                status: '活動中',
+                nextMeeting: '4月20日(土) 20:00 @シーシャラウンジ',
+                matchScore: 90,
+                matchReason: '同世代・同じ志向性のメンバーとの相性抜群'
+            },
+            {
+                id: 'g004',
+                name: '観光イノベーションラボ',
+                type: 'experience',
+                icon: '<i class="fas fa-map"></i>',
+                description: 'インバウンド向け新サービス企画',
+                members: ['田村修司'],
+                maxMembers: 6,
+                tags: ['観光', 'インバウンド', 'サービス開発'],
+                status: '新規募集',
+                nextMeeting: '4月22日(月) 18:30 @シーシャラウンジ',
+                matchScore: 83,
+                matchReason: 'デジタルマーケティングの知見が求められています'
+            },
+            {
+                id: 'g005',
+                name: 'AgriTech秋田',
+                type: 'collaboration',
+                icon: '<i class="fas fa-seedling"></i>',
+                description: 'IoT×AIで農業の未来を創る',
+                members: ['斉藤大樹'],
+                maxMembers: 4,
+                tags: ['農業', 'IoT', 'AI'],
+                status: '募集中',
+                nextMeeting: '4月25日(木) 19:30 @シーシャラウンジ',
+                matchScore: 88,
+                matchReason: '技術スキルを活かした地域貢献ができます'
+            }
+        ];
+
+        // ============ グローバル変数 ============
+        let currentMode = 'seeking';
+        let currentUser = {
+            name: '田中 太郎',
+            id: 'current_user',
+            joinedGroups: 3,
+            connections: 15,
+            hours: 24,
+            score: 4.8
+        };
+
+        // ============ 初期化 ============
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            setTimeout(() => {
+                updateDisplay();
+            }, 100);
+        }
+
+        // ============ イベントハンドラー ============
+        function setMode(mode) {
+            currentMode = mode;
+
+            // ボタンのアクティブ状態を更新
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(mode + 'Btn').classList.add('active');
+
+            updateDisplay();
+        }
+
+        // ============ 表示更新 ============
+        function updateDisplay() {
+            displayRecommendedGroups();
+            displayUserListing();
+        }
+
+        function displayRecommendedGroups() {
+            const container = document.getElementById('recommendedGroups');
+            container.innerHTML = '<div class="loading"></div>';
+
+            setTimeout(() => {
+                container.innerHTML = '';
+
+                let filteredGroups = dummyGroups.filter(group => {
+                    if (currentMode === 'seeking' || currentMode === 'offering') {
+                        return group.type === 'experience';
+                    }
+                    return group.type === 'collaboration';
+                });
+
+                filteredGroups.forEach(group => {
+                    const card = createGroupCard(group);
+                    container.appendChild(card);
+                });
+            }, 500);
+        }
+
+        function createGroupCard(group) {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const scoreClass = group.matchScore >= 90 ? 'high' :
+                              group.matchScore >= 85 ? 'medium' : 'low';
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div>
+                        <span class="card-icon">${group.icon}</span>
+                        <h3>${group.name}</h3>
+                    </div>
+                    <span class="match-score ${scoreClass}">${group.matchScore}%</span>
+                </div>
+                <p class="card-description">${group.description}</p>
+                <div class="tags">
+                    ${group.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+                <div class="info-row"><i class="fas fa-calendar-alt"></i> <strong>次回:</strong> ${group.nextMeeting}</div>
+                <div class="info-row"><i class="fas fa-users"></i> <strong>メンバー:</strong> ${group.members.length}/${group.maxMembers}名</div>
+                <div class="info-row"><i class="fas fa-sparkles"></i> ${group.matchReason}</div>
+                <div>
+                    <button class="btn" onclick="joinGroup('${group.id}', '${group.name}')">参加申請</button>
+                    <button class="btn btn-secondary" onclick="showGroupDetail('${group.id}')">詳細</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function displayUserListing() {
+            const container = document.getElementById('userListing');
+            container.innerHTML = '<div class="loading"></div>';
+
+            setTimeout(() => {
+                container.innerHTML = '';
+
+                let users = [];
+                if (currentMode === 'seeking') {
+                    users = dummyUsers.offering;
+                } else if (currentMode === 'offering') {
+                    users = dummyUsers.seeking;
+                } else {
+                    users = dummyUsers.collaboration;
+                }
+
+                users.forEach(user => {
+                    const card = createUserCard(user);
+                    container.appendChild(card);
+                });
+            }, 700);
+        }
+
+        function createUserCard(user) {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const scoreClass = user.matchScore >= 90 ? 'high' :
+                              user.matchScore >= 85 ? 'medium' : 'low';
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div>
+                        <span class="card-icon">${user.avatar}</span>
+                        <div>
+                            <h3>${user.name}</h3>
+                            <p style="color: #666; font-size: 0.9rem;">${user.title}</p>
+                        </div>
+                    </div>
+                    <span class="match-score ${scoreClass}">${user.matchScore}%</span>
+                </div>
+                <p class="card-description">${user.bio}</p>
+                <div class="tags">
+                    ${user.skills.slice(0, 3).map(skill =>
+                        `<span class="tag">${skill}</span>`
+                    ).join('')}
+                </div>
+                <button class="btn" onclick="connectUser('${user.id}', '${user.name}')">コネクト申請</button>
+            `;
+
+            return card;
+        }
+
+        // ============ アクション関数 ============
+        function joinGroup(groupId, groupName) {
+            showModal('参加申請完了', `
+                <h3><i class="fas fa-check-circle"></i> 「${groupName}」への参加申請が完了しました！</h3>
+                <p>グループリーダーからの承認をお待ちください。</p>
+                <p>承認後、次回のミーティング情報が送信されます。</p>
+                <div class="report-section">
+                    <p><strong>次のステップ:</strong></p>
+                    <ul>
+                        <li>24時間以内に承認通知が届きます</li>
+                        <li>グループチャットへの招待が送られます</li>
+                        <li>初回ミーティングの詳細が共有されます</li>
+                    </ul>
+                </div>
+                <button class="btn" onclick="closeModal()">OK</button>
+            `);
+
+            // 統計更新
+            currentUser.joinedGroups++;
+            updateActivitySummary();
+        }
+
+        function connectUser(userId, userName) {
+            showModal('コネクト申請完了', `
+                <h3><i class="fas fa-check-circle"></i> ${userName}さんへのコネクト申請を送信しました！</h3>
+                <p>相手の承認後、メッセージのやり取りが可能になります。</p>
+                <div class="report-section">
+                    <p><strong>マッチング理由:</strong></p>
+                    <p>あなたのスキルセットと${userName}さんのニーズが高い相性を示しています。</p>
+                </div>
+                <button class="btn" onclick="closeModal()">OK</button>
+            `);
+
+            currentUser.connections++;
+            updateActivitySummary();
+        }
+
+        function showGroupDetail(groupId) {
+            const group = dummyGroups.find(g => g.id === groupId);
+
+            showModal(group.name, `
+                <h2>${group.icon} ${group.name}</h2>
+                <p>${group.description}</p>
+
+                <h3><i class="fas fa-chart-bar"></i> グループ情報</h3>
+                <div class="report-section">
+                    <p><strong>現在のメンバー:</strong> ${group.members.join('、')}</p>
+                    <p><strong>募集状況:</strong> ${group.status}</p>
+                    <p><strong>次回ミーティング:</strong> ${group.nextMeeting}</p>
+                </div>
+
+                <h3><i class="fas fa-chart-line"></i> 活動履歴</h3>
+                <ul>
+                    <li>4月10日 - ビジネスモデル検討会（2時間）</li>
+                    <li>4月5日 - キックオフミーティング（2.5時間）</li>
+                    <li>3月30日 - プロジェクト計画策定（3時間）</li>
+                    <li>3月25日 - メンバー顔合わせ（1.5時間）</li>
+                </ul>
+
+                <h3><i class="fas fa-bullseye"></i> 期待される成果</h3>
+                <ul>
+                    <li>実践的なビジネス経験の獲得</li>
+                    <li>業界知識とネットワークの構築</li>
+                    <li>プロジェクト実績のポートフォリオ化</li>
+                </ul>
+
+                <button class="btn" onclick="generateReport('${groupId}')">レポート生成</button>
+                <button class="btn btn-secondary" onclick="closeModal()">閉じる</button>
+            `);
+        }
+
+        function generateReport(groupId) {
+            const reportContent = `
+                <h2><i class="fas fa-chart-bar"></i> 月次活動レポート</h2>
+
+                <div class="report-section">
+                    <h3>活動サマリー（2026年3月）</h3>
+                    <ul>
+                        <li>ミーティング実施回数: 8回</li>
+                        <li>総活動時間: 24時間</li>
+                        <li>参加メンバー: 4名</li>
+                        <li>完了タスク: 12件</li>
+                    </ul>
+                </div>
+
+                <div class="report-section">
+                    <h3>主な成果</h3>
+                    <ul>
+                        <li>ビジネスモデルキャンバス完成</li>
+                        <li>MVP（最小限の実用製品）の設計完了</li>
+                        <li>プロトタイプ第1版リリース</li>
+                        <li>初期ユーザー10名からのフィードバック獲得</li>
+                        <li>改善点の洗い出しと優先順位付け完了</li>
+                    </ul>
+                </div>
+
+                <div class="report-section">
+                    <h3>学びと気づき</h3>
+                    <ul>
+                        <li>ユーザーインタビューの重要性を実感</li>
+                        <li>アジャイル開発手法の実践経験を獲得</li>
+                        <li>チームコミュニケーションの改善点を発見</li>
+                    </ul>
+                </div>
+
+                <div class="report-section">
+                    <h3>今後の推奨アクション</h3>
+                    <ul>
+                        <li><i class="fas fa-bullseye"></i> 来月は資金調達準備を開始することを推奨</li>
+                        <li><i class="fas fa-users"></i> 技術面での専門家をもう1名追加すると効果的</li>
+                        <li><i class="fas fa-calendar-alt"></i> 月2回のミーティングを週1回に増やすことを検討</li>
+                        <li><i class="fas fa-chart-bar"></i> KPIの設定と定期的な振り返りの実施</li>
+                    </ul>
+                </div>
+
+                <button class="btn" onclick="alert('PDFダウンロード機能は準備中です')">PDFで保存</button>
+                <button class="btn btn-secondary" onclick="closeModal()">閉じる</button>
+            `;
+
+            showModal('活動レポート', reportContent);
+        }
+
+        function showPortfolio() {
+            const portfolioContent = `
+                <h2><i class="fas fa-folder"></i> あなたのポートフォリオ</h2>
+
+                <div class="portfolio-section">
+                    <h3 style="color: #333;"><i class="fas fa-bullseye"></i> 参加プロジェクト</h3>
+                    <div class="report-section" style="color: #333;">
+                        <p style="color: #333;"><strong style="color: #333;">秋田DXプロジェクト</strong></p>
+                        <p style="color: #333;">役割: マーケティング担当</p>
+                        <p style="color: #333;">期間: 2026年1月〜現在</p>
+                        <ul style="color: #333;">
+                            <li style="color: #333;">SNS運用で月間エンゲージメント300%向上</li>
+                            <li style="color: #333;">若者向けサービス企画書を3本作成</li>
+                            <li style="color: #333;">デジタルマーケティング戦略の立案と実行</li>
+                        </ul>
+                    </div>
+
+                    <div class="report-section" style="color: #333;">
+                        <p style="color: #333;"><strong style="color: #333;">秋田フードテック研究会</strong></p>
+                        <p style="color: #333;">役割: SNS戦略・PR担当</p>
+                        <p style="color: #333;">期間: 2026年2月〜現在</p>
+                        <ul style="color: #333;">
+                            <li style="color: #333;">Instagram運用でフォロワー1,000名獲得</li>
+                            <li style="color: #333;">新商品のプロモーション戦略策定</li>
+                            <li style="color: #333;">インフルエンサーとのコラボ企画実施</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="portfolio-section">
+                    <h3 style="color: #333;"><i class="fas fa-lightbulb"></i> 獲得スキル</h3>
+                    <div class="tags">
+                        <span class="tag">プロジェクト管理</span>
+                        <span class="tag">デジタルマーケティング</span>
+                        <span class="tag">データ分析</span>
+                        <span class="tag">プレゼンテーション</span>
+                        <span class="tag">ビジネス企画</span>
+                        <span class="tag">SNS運用</span>
+                        <span class="tag">チームワーク</span>
+                        <span class="tag">課題解決力</span>
+                    </div>
+                </div>
+
+                <div class="portfolio-section">
+                    <h3 style="color: #333;"><i class="fas fa-star"></i> 推薦コメント</h3>
+                    <blockquote style="color: #333;">
+                        "若い感性と分析力を兼ね備えた優秀な人材。マーケティングの実践的なスキルを短期間で習得し、具体的な成果を出している。ぜひ正式に採用したい。"
+                        <br><br>- 山田一郎（株式会社秋田製作所 代表取締役）
+                    </blockquote>
+                    <blockquote style="color: #333;">
+                        "SNS戦略の立案から実行まで、一貫して高いクオリティで遂行。若者目線の斬新なアイデアが新商品開発に大きく貢献した。"
+                        <br><br>- 鈴木恵子（合同会社あきたフードラボ CEO）
+                    </blockquote>
+                </div>
+
+                <button class="btn" onclick="alert('ポートフォリオの共有リンクを作成しました！')">共有リンク作成</button>
+                <button class="btn btn-secondary" onclick="closeModal()">閉じる</button>
+            `;
+
+            showModal('ポートフォリオ', portfolioContent);
+        }
+
+        function updateActivitySummary() {
+            const summary = document.getElementById('activitySummary');
+            summary.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">参加グループ</span>
+                    <span class="stat-value">${currentUser.joinedGroups}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">コネクション</span>
+                    <span class="stat-value">${currentUser.connections}名</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">活動時間</span>
+                    <span class="stat-value">${currentUser.hours}時間</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">評価スコア</span>
+                    <span class="stat-value">⭐ ${currentUser.score}</span>
+                </div>
+            `;
+        }
+
+        // ============ モーダル関連 ============
+        function showModal(title, content) {
+            const modal = document.getElementById('modal');
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = content;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function showUserProfile() {
+            const userProfileContent = `
+                <h2>ユーザープロフィール</h2>
+
+                <div class="report-section" style="color: #333;">
+                    <h3 style="color: #333;">基本情報</h3>
+                    <p style="color: #333;"><strong style="color: #333;">名前:</strong> 田中 太郎</p>
+                    <p style="color: #333;"><strong style="color: #333;">年齢:</strong> 26歳</p>
+                    <p style="color: #333;"><strong style="color: #333;">所属:</strong> 秋田県立大学 システム科学技術学部</p>
+                    <p style="color: #333;"><strong style="color: #333;">居住地:</strong> 秋田市</p>
+                </div>
+
+                <div class="portfolio-section">
+                    <h3 style="color: #333;">スキル</h3>
+                    <div class="tags">
+                        <span class="tag">マーケティング</span>
+                        <span class="tag">SNS運用</span>
+                        <span class="tag">データ分析</span>
+                        <span class="tag">プロジェクト管理</span>
+                        <span class="tag">ビジネス企画</span>
+                        <span class="tag">チームワーク</span>
+                    </div>
+                </div>
+
+                <div class="report-section" style="color: #333;">
+                    <h3 style="color: #333;">興味分野</h3>
+                    <ul style="color: #333;">
+                        <li style="color: #333;">地域活性化</li>
+                        <li style="color: #333;">スタートアップ</li>
+                        <li style="color: #333;">DX推進</li>
+                        <li style="color: #333;">観光業界</li>
+                        <li style="color: #333;">地方創生</li>
+                    </ul>
+                </div>
+
+                <div class="report-section" style="color: #333;">
+                    <h3 style="color: #333;">自己紹介</h3>
+                    <p style="color: #333;">地元秋田でテクノロジーとマーケティングを活用した地域貢献を目指している大学生です。実践的なビジネス経験を積みながら、将来的には秋田で起業することを考えています。</p>
+                </div>
+
+                <button class="btn btn-secondary" onclick="closeModal()">閉じる</button>
+            `;
+
+            showModal('ユーザープロフィール', userProfileContent);
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
